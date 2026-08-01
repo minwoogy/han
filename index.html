@@ -76,11 +76,15 @@ button:disabled{opacity:.45}
 
 <section class="card pad">
   <div class="grid2">
-    <button id="geojson" class="primary">GeoJSON 저장</button>
+    <button id="geojson" class="primary">경로 JSON 저장</button>
     <button id="gpx" class="primary">GPX 저장</button>
   </div>
   <div class="grid2" style="margin-top:8px">
     <button id="csv" class="soft">CSV 저장</button>
+    <button id="share" class="green">경로 파일 공유</button>
+  </div>
+  <div class="grid2" style="margin-top:8px">
+    <button id="copyjson" class="soft">JSON 내용 복사</button>
     <button id="clear" class="gold">기록 초기화</button>
   </div>
   <p class="note">
@@ -161,15 +165,50 @@ function fitRoute(){
  const b=new google.maps.LatLngBounds();points.forEach(p=>b.extend({lat:p.lat,lng:p.lng}));map.fitBounds(b,50);
 }
 function download(name,type,text){
- const b=new Blob([text],{type}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+ const b=new Blob([text],{type});
+ const url=URL.createObjectURL(b);
+ const a=document.createElement('a');
+ a.href=url;a.download=name;a.style.display='none';
+ document.body.appendChild(a);a.click();
+ setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url)},2000);
 }
 function meta(){return {mission:$('mission').value,callsign:$('callsign').value,team:$('team').value,exportedAt:new Date().toISOString()}}
-function exportGeo(){
- const obj={type:'FeatureCollection',properties:meta(),features:[
+function buildRouteJSON(){
+ return {type:'FeatureCollection',properties:meta(),features:[
   {type:'Feature',properties:meta(),geometry:{type:'LineString',coordinates:points.map(p=>[p.lng,p.lat,p.altitude||0])}},
   ...points.map((p,i)=>({type:'Feature',properties:{...p,index:i+1,...meta()},geometry:{type:'Point',coordinates:[p.lng,p.lat,p.altitude||0]}}))
  ]};
- download(`POL_SEARCH_${$('callsign').value}.geojson`,'application/geo+json',JSON.stringify(obj,null,2));
+}
+function exportGeo(){
+ if(!points.length){alert('저장할 위치기록이 없습니다.');return}
+ const obj=buildRouteJSON();
+ download(`POL_SEARCH_${$('callsign').value}.json`,'application/json;charset=utf-8',JSON.stringify(obj,null,2));
+}
+async function shareRoute(){
+ if(!points.length){alert('공유할 위치기록이 없습니다.');return}
+ const text=JSON.stringify(buildRouteJSON(),null,2);
+ const file=new File([text],`POL_SEARCH_${$('callsign').value}.json`,{type:'application/json'});
+ try{
+   if(navigator.canShare && navigator.canShare({files:[file]})){
+     await navigator.share({title:'POL-SEARCH 경로기록',text:'수색대원 GPS 경로기록',files:[file]});
+   }else if(navigator.share){
+     await navigator.share({title:'POL-SEARCH 경로기록',text});
+   }else{
+     exportGeo();
+     alert('파일 공유를 지원하지 않아 JSON 파일로 저장했습니다.');
+   }
+ }catch(e){if(e.name!=='AbortError')alert('공유 실패: '+e.message)}
+}
+async function copyRouteJSON(){
+ if(!points.length){alert('복사할 위치기록이 없습니다.');return}
+ const text=JSON.stringify(buildRouteJSON(),null,2);
+ try{
+   await navigator.clipboard.writeText(text);
+   alert('JSON 내용이 복사되었습니다.');
+ }catch(e){
+   const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
+   document.execCommand('copy');document.body.removeChild(ta);alert('JSON 내용이 복사되었습니다.');
+ }
 }
 function exportCSV(){
  const head='mission,callsign,team,index,timestamp,latitude,longitude,accuracy_m,altitude_m,speed_mps,heading\n';
@@ -188,6 +227,7 @@ $('mangwoo').onclick=()=>map&&map.setCenter({lat:37.60075,lng:127.11375});
 $('fit').onclick=fitRoute;
 $('clear').onclick=()=>{if(confirm('저장된 위치기록을 모두 삭제할까요?')){stop();points=[];localStorage.removeItem('polsearch_points');if(pathLine)pathLine.setPath([]);if(currentMarker)currentMarker.setMap(null);if(accuracyCircle)accuracyCircle.setMap(null);currentMarker=null;accuracyCircle=null;redraw();$('elapsed').textContent='00:00';log('기록 초기화')}};
 $('geojson').onclick=exportGeo;$('csv').onclick=exportCSV;$('gpx').onclick=exportGPX;
+$('share').onclick=shareRoute;$('copyjson').onclick=copyRouteJSON;
 try{points=JSON.parse(localStorage.getItem('polsearch_points')||'[]')}catch{}
 secureLabel();setTimeout(()=>{if(points.length)redraw()},1200);
 </script>
