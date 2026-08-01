@@ -1,6 +1,1 @@
-# POL-SEARCH Google Maps v0.3.1
-
-- JSON 확장자로 저장
-- 경로 파일 공유 버튼 추가
-- JSON 내용 복사 버튼 추가
-- 모바일 다운로드 호환성 개선
+POL-SEARCH 대원용 v0.5: Firebase 자동업로드 및 재전송 기능.

@@ -1,236 +1,65 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#08233f">
-<title>POL-SEARCH Google Maps v0.3</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>POL-SEARCH 대원용 v0.5</title>
 <style>
-:root{--navy:#08233f;--blue:#0b66d6;--green:#168a4b;--red:#c43b3b;--gold:#d99b00;--bg:#eef3f8;--panel:#fff;--text:#152236}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:var(--bg);color:var(--text)}
-header{padding:14px 16px;background:linear-gradient(135deg,#06192f,#124a7c);color:#fff}
-header h1{margin:0;font-size:19px} header p{margin:4px 0 0;font-size:12px;opacity:.85}
-main{max-width:980px;margin:auto;padding:10px}
-.card{background:#fff;border-radius:16px;box-shadow:0 5px 18px rgba(20,40,70,.09);margin-bottom:10px;overflow:hidden}
-.pad{padding:14px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}
-input,select,button{font:inherit}
-input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;background:#fff}
-button{border:0;border-radius:11px;padding:12px 10px;font-weight:800;cursor:pointer}
-.primary{background:var(--blue);color:#fff}.green{background:var(--green);color:#fff}.red{background:var(--red);color:#fff}.soft{background:#e9eff6;color:#17324f}.gold{background:#fff0bd;color:#6c4b00}
-button:disabled{opacity:.45}
-#map{height:50vh;min-height:350px;background:#dce6ef}
-.status{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:11px;background:#f2f6fa;font-size:13px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans KR",sans-serif;background:#eef3f8;color:#152236}
+header{padding:14px 16px;background:linear-gradient(135deg,#06192f,#124a7c);color:#fff}header h1{margin:0;font-size:19px}header p{margin:4px 0 0;font-size:12px;opacity:.85}
+main{max-width:900px;margin:auto;padding:10px}.card{background:#fff;border-radius:16px;box-shadow:0 5px 18px rgba(20,40,70,.09);margin-bottom:10px;overflow:hidden}.pad{padding:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}
+input,select,button{font:inherit}input,select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px}button{border:0;border-radius:11px;padding:12px 10px;font-weight:800;cursor:pointer}button:disabled{opacity:.45}
+.green{background:#168a4b;color:#fff}.red{background:#c43b3b;color:#fff}.primary{background:#0b66d6;color:#fff}.soft{background:#e9eff6;color:#17324f}.gold{background:#fff0bd;color:#6c4b00}
+#map{height:48vh;min-height:340px}.status{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:11px;background:#f2f6fa;font-size:13px}
 .dot{width:11px;height:11px;border-radius:50%;background:#7b8795}.dot.on{background:#19a75a;box-shadow:0 0 0 5px rgba(25,167,90,.15)}.dot.err{background:#d33}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
-.stat{background:#f4f7fa;border-radius:11px;padding:9px;text-align:center}
-.stat b{font-size:17px;display:block}.stat small{font-size:10px;color:#657386}
-.log{max-height:145px;overflow:auto;font-size:11px;background:#081828;color:#d9f1ff;border-radius:11px;padding:9px;white-space:pre-wrap}
-.note{font-size:11px;line-height:1.5;color:#5e6b79;background:#f6f8fb;border-radius:11px;padding:10px}
-.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#e8f2ff;color:#0754a4;font-size:10px;font-weight:800}
-@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}.grid2,.grid3{grid-template-columns:1fr 1fr}}
-</style>
-</head>
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.stat{background:#f4f7fa;border-radius:11px;padding:9px;text-align:center}.stat b{font-size:17px;display:block}.stat small{font-size:10px;color:#657386}
+.log{max-height:135px;overflow:auto;font-size:11px;background:#081828;color:#d9f1ff;border-radius:11px;padding:9px;white-space:pre-wrap}.note{font-size:11px;line-height:1.5;color:#5e6b79;background:#f6f8fb;border-radius:11px;padding:10px}.badge{padding:3px 7px;border-radius:999px;background:#e8f2ff;color:#0754a4;font-size:10px;font-weight:800}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr}}
+</style></head>
 <body>
-<header>
-  <h1>POL-SEARCH Google Maps v0.3</h1>
-  <p>수색대원 개인 휴대전화의 실제 GPS 이동경로 기록 시연</p>
-</header>
-
+<header><h1>POL-SEARCH 대원용 v0.5</h1><p>GPS 실시간 기록 · Firebase 자동 업로드 · 통신복구 재전송</p></header>
 <main>
 <section class="card pad">
-  <div class="grid2">
-    <div><label>작전명</label><input id="mission" value="망우산 미귀가자 수색 시연"></div>
-    <div><label>호출명</label><input id="callsign" value="시험대원-01"></div>
-  </div>
-  <div class="grid2" style="margin-top:8px">
-    <div><label>소속/팀</label><input id="team" value="POL-SEARCH 시험팀"></div>
-    <div><label>기록 최소간격</label>
-      <select id="minInterval"><option value="3000">3초</option><option value="5000" selected>5초</option><option value="10000">10초</option></select>
-    </div>
-  </div>
-  <div class="status" style="margin-top:10px"><span id="dot" class="dot"></span><b id="status">대기 중</b><span id="secure" class="badge"></span></div>
-  <div class="grid2" style="margin-top:9px">
-    <button id="start" class="green">수색 시작</button>
-    <button id="stop" class="red" disabled>수색 종료</button>
-  </div>
-  <div class="grid3" style="margin-top:8px">
-    <button id="current" class="primary">현재 위치 확인</button>
-    <button id="mangwoo" class="soft">망우산으로 이동</button>
-    <button id="fit" class="soft">전체 경로 보기</button>
-  </div>
-  <div class="stats">
-    <div class="stat"><b id="count">0</b><small>위치점</small></div>
-    <div class="stat"><b id="distance">0 m</b><small>이동거리</small></div>
-    <div class="stat"><b id="accuracy">-</b><small>최근 정확도</small></div>
-    <div class="stat"><b id="elapsed">00:00</b><small>기록시간</small></div>
-  </div>
+<div class="grid2"><div><label>작전번호</label><input id="missionId" value="TEST-001"></div><div><label>호출명</label><input id="callsign" value="시험대원-01"></div></div>
+<div class="grid2" style="margin-top:8px"><div><label>소속/팀</label><input id="team" value="POL-SEARCH 시험팀"></div><div><label>기록 간격</label><select id="minInterval"><option value="3000">3초</option><option value="5000" selected>5초</option><option value="10000">10초</option></select></div></div>
+<div class="status" style="margin-top:10px"><span id="dot" class="dot"></span><b id="status">Firebase 연결 준비 중</b><span id="authBadge" class="badge">인증 대기</span></div>
+<div class="grid2" style="margin-top:9px"><button id="start" class="green">수색 시작</button><button id="stop" class="red" disabled>수색 종료</button></div>
+<div class="grid2" style="margin-top:8px"><button id="current" class="primary">현재 위치 확인</button><button id="fit" class="soft">전체 경로 보기</button></div>
+<div class="stats"><div class="stat"><b id="count">0</b><small>위치점</small></div><div class="stat"><b id="distance">0 m</b><small>이동거리</small></div><div class="stat"><b id="accuracy">-</b><small>최근 정확도</small></div><div class="stat"><b id="pending">0</b><small>미전송</small></div></div>
 </section>
-
-<section class="card">
-  <div id="map"></div>
-</section>
-
-<section class="card pad">
-  <div class="grid2">
-    <button id="geojson" class="primary">경로 JSON 저장</button>
-    <button id="gpx" class="primary">GPX 저장</button>
-  </div>
-  <div class="grid2" style="margin-top:8px">
-    <button id="csv" class="soft">CSV 저장</button>
-    <button id="share" class="green">경로 파일 공유</button>
-  </div>
-  <div class="grid2" style="margin-top:8px">
-    <button id="copyjson" class="soft">JSON 내용 복사</button>
-    <button id="clear" class="gold">기록 초기화</button>
-  </div>
-  <p class="note">
-    현재 버전은 한 대의 휴대전화가 이동한 GPS 경로를 기록합니다. 화면이 꺼지거나 브라우저가 백그라운드로 전환되면 기록이 중단될 수 있습니다.
-  </p>
-  <div id="log" class="log">앱 준비 중...</div>
-</section>
+<section class="card"><div id="map"></div></section>
+<section class="card pad"><div class="grid2"><button id="share" class="primary">예비파일 공유</button><button id="clear" class="gold">기록 초기화</button></div>
+<p class="note">통신 가능 시 위치점이 자동 업로드됩니다. 실패 위치는 휴대전화에 임시저장되고 온라인 복구 시 재전송됩니다.</p><div id="log" class="log">앱 초기화 중...</div></section>
 </main>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
-const $=id=>document.getElementById(id);
-let points=[], watchId=null, startedAt=null, timer=null, lastAccepted=0;
-let map=null, pathLine=null, currentMarker=null, accuracyCircle=null;
-
-function log(msg){$('log').textContent='['+new Date().toLocaleTimeString()+'] '+msg+'\n'+$('log').textContent}
-function secureLabel(){$('secure').textContent=window.isSecureContext?'보안 연결':'비보안 환경'}
-function initMap(){
-  const mangwoo={lat:37.60075,lng:127.11375};
-  map=new google.maps.Map(document.getElementById('map'),{
-    center:mangwoo,zoom:15,mapTypeId:'terrain',
-    mapTypeControl:true,streetViewControl:false,fullscreenControl:true
-  });
-  pathLine=new google.maps.Polyline({
-    path:[],geodesic:true,strokeColor:'#0b66d6',strokeOpacity:1,strokeWeight:5,map
-  });
-  log('Google Maps 지도 초기화 완료');
-}
+const firebaseConfig={"apiKey": "AIzaSyCPb0lXEII-WBHu30J_qr3Mr34IbRWPLgc", "authDomain": "polsearch112.firebaseapp.com", "databaseURL": "https://polsearch112-default-rtdb.asia-southeast1.firebasedatabase.app", "projectId": "polsearch112", "storageBucket": "polsearch112.firebasestorage.app", "messagingSenderId": "775201329579", "appId": "1:775201329579:web:20eb296f51ca0118d042ee", "measurementId": "G-2CFSKEM4VN"};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(),db=firebase.database(),$=id=>document.getElementById(id);
+let uid=null,map=null,pathLine=null,currentMarker=null,accuracyCircle=null,watchId=null,lastAccepted=0;
+let points=JSON.parse(localStorage.getItem('polsearch_points_v05')||'[]');
+let queue=JSON.parse(localStorage.getItem('polsearch_queue')||'[]');
+function log(m){$('log').textContent='['+new Date().toLocaleTimeString()+'] '+m+'\n'+$('log').textContent}
+function safeKey(s){return String(s||'').trim().replace(/[.#$\[\]\/]/g,'_').slice(0,80)}
+function initMap(){map=new google.maps.Map($('map'),{center:{lat:37.60075,lng:127.11375},zoom:15,mapTypeId:'terrain',streetViewControl:false});pathLine=new google.maps.Polyline({map,strokeColor:'#0b66d6',strokeWeight:5});redraw()}
 window.initMap=initMap;
-
-function hav(a,b){
- const R=6371000, p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180;
- const x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
- return 2*R*Math.asin(Math.sqrt(x));
-}
+auth.onAuthStateChanged(async user=>{if(user){uid=user.uid;$('authBadge').textContent='익명 인증완료';$('status').textContent='자동업로드 준비 완료';log('Firebase 익명 인증 완료');await flushQueue()}else{try{await auth.signInAnonymously()}catch(e){$('dot').className='dot err';$('status').textContent='인증 실패';log(e.message)}}});
+function hav(a,b){const R=6371000,p1=a.lat*Math.PI/180,p2=b.lat*Math.PI/180,dp=(b.lat-a.lat)*Math.PI/180,dl=(b.lng-a.lng)*Math.PI/180;const x=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function totalDistance(){let d=0;for(let i=1;i<points.length;i++)d+=hav(points[i-1],points[i]);return d}
-function redraw(){
- $('count').textContent=points.length;
- const d=totalDistance();$('distance').textContent=d<1000?Math.round(d)+' m':(d/1000).toFixed(2)+' km';
- if(points.length)$('accuracy').textContent=Math.round(points.at(-1).accuracy)+' m';
- if(pathLine)pathLine.setPath(points.map(p=>({lat:p.lat,lng:p.lng})));
- if(points.length&&map){
-   const p=points.at(-1),pos={lat:p.lat,lng:p.lng};
-   if(!currentMarker)currentMarker=new google.maps.Marker({position:pos,map,title:$('callsign').value});
-   else currentMarker.setPosition(pos);
-   if(!accuracyCircle)accuracyCircle=new google.maps.Circle({
-     map,center:pos,radius:p.accuracy,strokeColor:'#0b66d6',strokeOpacity:.65,strokeWeight:2,fillColor:'#0b66d6',fillOpacity:.12
-   });
-   else{accuracyCircle.setCenter(pos);accuracyCircle.setRadius(p.accuracy)}
-   map.panTo(pos);
- }
- localStorage.setItem('polsearch_points',JSON.stringify(points));
-}
-function acceptPosition(pos,force=false){
- const now=Date.now(),min=+$('minInterval').value;
- if(!force&&now-lastAccepted<min)return;
- const c=pos.coords;
- const p={lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,altitude:c.altitude,speed:c.speed,heading:c.heading,timestamp:pos.timestamp||now};
- points.push(p);lastAccepted=now;redraw();
- $('status').textContent='기록 중 · 최근 수신 '+new Date().toLocaleTimeString();$('dot').className='dot on';
- log(`위치 수신: ${p.lat.toFixed(6)}, ${p.lng.toFixed(6)} / 정확도 ±${Math.round(p.accuracy)}m`);
-}
-function geoError(e){
- $('dot').className='dot err';$('status').textContent='위치 오류: '+e.message;log(`위치 오류(${e.code}): ${e.message}`);
-}
-function start(){
- if(!navigator.geolocation){geoError({code:0,message:'이 브라우저는 위치기능을 지원하지 않습니다.'});return}
- startedAt=Date.now();$('start').disabled=true;$('stop').disabled=false;$('dot').className='dot on';$('status').textContent='GPS 연결 중';
- watchId=navigator.geolocation.watchPosition(p=>acceptPosition(p,false),geoError,{enableHighAccuracy:true,maximumAge:0,timeout:20000});
- timer=setInterval(()=>{const s=Math.floor((Date.now()-startedAt)/1000);$('elapsed').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},1000);
- log('수색 기록 시작');
-}
-function stop(){
- if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;clearInterval(timer);
- $('start').disabled=false;$('stop').disabled=true;$('dot').className='dot';$('status').textContent='기록 종료 · 파일 저장 가능';log('수색 기록 종료');
-}
-function fitRoute(){
- if(!map||!points.length)return;
- const b=new google.maps.LatLngBounds();points.forEach(p=>b.extend({lat:p.lat,lng:p.lng}));map.fitBounds(b,50);
-}
-function download(name,type,text){
- const b=new Blob([text],{type});
- const url=URL.createObjectURL(b);
- const a=document.createElement('a');
- a.href=url;a.download=name;a.style.display='none';
- document.body.appendChild(a);a.click();
- setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url)},2000);
-}
-function meta(){return {mission:$('mission').value,callsign:$('callsign').value,team:$('team').value,exportedAt:new Date().toISOString()}}
-function buildRouteJSON(){
- return {type:'FeatureCollection',properties:meta(),features:[
-  {type:'Feature',properties:meta(),geometry:{type:'LineString',coordinates:points.map(p=>[p.lng,p.lat,p.altitude||0])}},
-  ...points.map((p,i)=>({type:'Feature',properties:{...p,index:i+1,...meta()},geometry:{type:'Point',coordinates:[p.lng,p.lat,p.altitude||0]}}))
- ]};
-}
-function exportGeo(){
- if(!points.length){alert('저장할 위치기록이 없습니다.');return}
- const obj=buildRouteJSON();
- download(`POL_SEARCH_${$('callsign').value}.json`,'application/json;charset=utf-8',JSON.stringify(obj,null,2));
-}
-async function shareRoute(){
- if(!points.length){alert('공유할 위치기록이 없습니다.');return}
- const text=JSON.stringify(buildRouteJSON(),null,2);
- const file=new File([text],`POL_SEARCH_${$('callsign').value}.json`,{type:'application/json'});
- try{
-   if(navigator.canShare && navigator.canShare({files:[file]})){
-     await navigator.share({title:'POL-SEARCH 경로기록',text:'수색대원 GPS 경로기록',files:[file]});
-   }else if(navigator.share){
-     await navigator.share({title:'POL-SEARCH 경로기록',text});
-   }else{
-     exportGeo();
-     alert('파일 공유를 지원하지 않아 JSON 파일로 저장했습니다.');
-   }
- }catch(e){if(e.name!=='AbortError')alert('공유 실패: '+e.message)}
-}
-async function copyRouteJSON(){
- if(!points.length){alert('복사할 위치기록이 없습니다.');return}
- const text=JSON.stringify(buildRouteJSON(),null,2);
- try{
-   await navigator.clipboard.writeText(text);
-   alert('JSON 내용이 복사되었습니다.');
- }catch(e){
-   const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();
-   document.execCommand('copy');document.body.removeChild(ta);alert('JSON 내용이 복사되었습니다.');
- }
-}
-function exportCSV(){
- const head='mission,callsign,team,index,timestamp,latitude,longitude,accuracy_m,altitude_m,speed_mps,heading\n';
- const rows=points.map((p,i)=>[$('mission').value,$('callsign').value,$('team').value,i+1,new Date(p.timestamp).toISOString(),p.lat,p.lng,p.accuracy,p.altitude??'',p.speed??'',p.heading??''].map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\n');
- download(`POL_SEARCH_${$('callsign').value}.csv`,'text/csv;charset=utf-8','\ufeff'+head+rows);
-}
-function exportGPX(){
- const esc=s=>String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
- const seg=points.map(p=>`<trkpt lat="${p.lat}" lon="${p.lng}">${p.altitude!=null?`<ele>${p.altitude}</ele>`:''}<time>${new Date(p.timestamp).toISOString()}</time><extensions><accuracy>${p.accuracy}</accuracy></extensions></trkpt>`).join('');
- const xml=`<?xml version="1.0" encoding="UTF-8"?><gpx version="1.1" creator="POL-SEARCH" xmlns="http://www.topografix.com/GPX/1/1"><metadata><name>${esc($('mission').value)}</name><time>${new Date().toISOString()}</time></metadata><trk><name>${esc($('callsign').value)}</name><desc>${esc($('team').value)}</desc><trkseg>${seg}</trkseg></trk></gpx>`;
- download(`POL_SEARCH_${$('callsign').value}.gpx`,'application/gpx+xml',xml);
-}
-$('start').onclick=start;$('stop').onclick=stop;
-$('current').onclick=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>acceptPosition(p,true),geoError,{enableHighAccuracy:true,timeout:20000,maximumAge:0}):geoError({message:'위치 미지원'});
-$('mangwoo').onclick=()=>map&&map.setCenter({lat:37.60075,lng:127.11375});
-$('fit').onclick=fitRoute;
-$('clear').onclick=()=>{if(confirm('저장된 위치기록을 모두 삭제할까요?')){stop();points=[];localStorage.removeItem('polsearch_points');if(pathLine)pathLine.setPath([]);if(currentMarker)currentMarker.setMap(null);if(accuracyCircle)accuracyCircle.setMap(null);currentMarker=null;accuracyCircle=null;redraw();$('elapsed').textContent='00:00';log('기록 초기화')}};
-$('geojson').onclick=exportGeo;$('csv').onclick=exportCSV;$('gpx').onclick=exportGPX;
-$('share').onclick=shareRoute;$('copyjson').onclick=copyRouteJSON;
-try{points=JSON.parse(localStorage.getItem('polsearch_points')||'[]')}catch{}
-secureLabel();setTimeout(()=>{if(points.length)redraw()},1200);
+function redraw(){$('count').textContent=points.length;$('pending').textContent=queue.length;const d=totalDistance();$('distance').textContent=d<1000?Math.round(d)+' m':(d/1000).toFixed(2)+' km';if(points.length)$('accuracy').textContent=Math.round(points.at(-1).accuracy)+' m';if(pathLine)pathLine.setPath(points.map(p=>({lat:p.lat,lng:p.lng})));if(points.length&&map){const p=points.at(-1),pos={lat:p.lat,lng:p.lng};if(!currentMarker)currentMarker=new google.maps.Marker({position:pos,map});else currentMarker.setPosition(pos);if(!accuracyCircle)accuracyCircle=new google.maps.Circle({map,center:pos,radius:p.accuracy,strokeColor:'#0b66d6',fillColor:'#0b66d6',fillOpacity:.12});else{accuracyCircle.setCenter(pos);accuracyCircle.setRadius(p.accuracy)}}localStorage.setItem('polsearch_points_v05',JSON.stringify(points));localStorage.setItem('polsearch_queue',JSON.stringify(queue))}
+function missionPath(){return 'missions/'+safeKey($('missionId').value)+'/members/'+uid}
+async function ensureMeta(status='active'){await db.ref(missionPath()+'/meta').update({callsign:$('callsign').value,team:$('team').value,missionId:$('missionId').value,uid,status,lastSeen:firebase.database.ServerValue.TIMESTAMP})}
+async function uploadPoint(p){if(!uid)throw new Error('인증 대기 중');await ensureMeta('active');const key=String(p.timestamp)+'_'+Math.random().toString(36).slice(2,7);await db.ref(missionPath()+'/points/'+key).set(p);await db.ref(missionPath()+'/latest').set(p)}
+async function flushQueue(){if(!uid||!navigator.onLine||!queue.length)return;const remain=[];for(const item of queue){try{await uploadPoint(item)}catch(e){remain.push(item)}}queue=remain;redraw();if(!queue.length)log('미전송 위치 재전송 완료')}
+async function acceptPosition(pos,force=false){const now=Date.now(),min=+$('minInterval').value;if(!force&&now-lastAccepted<min)return;lastAccepted=now;const c=pos.coords,p={lat:c.latitude,lng:c.longitude,accuracy:c.accuracy,altitude:c.altitude,speed:c.speed,heading:c.heading,timestamp:pos.timestamp||now};points.push(p);redraw();$('dot').className='dot on';$('status').textContent='기록 중 · 자동업로드';try{await uploadPoint(p);log('위치 자동업로드 완료')}catch(e){queue.push(p);redraw();log('업로드 보류: '+e.message)}}
+function geoError(e){$('dot').className='dot err';$('status').textContent='위치 오류: '+e.message;log(e.message)}
+async function start(){if(!uid){alert('Firebase 인증이 완료될 때까지 잠시 기다려주세요.');return}if(!$('missionId').value.trim()||!$('callsign').value.trim()){alert('작전번호와 호출명을 입력하세요.');return}$('start').disabled=true;$('stop').disabled=false;await ensureMeta('active');watchId=navigator.geolocation.watchPosition(p=>acceptPosition(p),geoError,{enableHighAccuracy:true,maximumAge:0,timeout:20000});log('수색 시작')}
+async function stop(){if(watchId!==null)navigator.geolocation.clearWatch(watchId);watchId=null;$('start').disabled=false;$('stop').disabled=true;$('dot').className='dot';$('status').textContent='수색 종료';try{await db.ref(missionPath()+'/meta').update({status:'finished',finishedAt:firebase.database.ServerValue.TIMESTAMP,lastSeen:firebase.database.ServerValue.TIMESTAMP})}catch(e){log(e.message)}await flushQueue();log('수색 종료 및 최종 전송')}
+function buildJSON(){return {type:'FeatureCollection',properties:{missionId:$('missionId').value,callsign:$('callsign').value,team:$('team').value},features:[{type:'Feature',geometry:{type:'LineString',coordinates:points.map(p=>[p.lng,p.lat,p.altitude||0])},properties:{}},...points.map(p=>({type:'Feature',geometry:{type:'Point',coordinates:[p.lng,p.lat,p.altitude||0]},properties:p}))]}}
+async function share(){const text=JSON.stringify(buildJSON(),null,2);const filename='POL_SEARCH_'+safeKey($('callsign').value)+'.json';const file=new File([text],filename,{type:'application/json'});if(navigator.canShare&&navigator.canShare({files:[file]}))await navigator.share({files:[file],title:'POL-SEARCH 경로'});else{const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=filename;a.click()}}
+$('start').onclick=start;$('stop').onclick=stop;$('current').onclick=()=>navigator.geolocation.getCurrentPosition(p=>acceptPosition(p,true),geoError,{enableHighAccuracy:true});$('fit').onclick=()=>{if(!points.length)return;const b=new google.maps.LatLngBounds();points.forEach(p=>b.extend({lat:p.lat,lng:p.lng}));map.fitBounds(b,50)};$('share').onclick=share;$('clear').onclick=()=>{if(confirm('휴대전화 기록을 초기화할까요?')){points=[];queue=[];redraw();if(pathLine)pathLine.setPath([])}};window.addEventListener('online',flushQueue);redraw();
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD1uobdsxhk2lwUs9eawWvYvReE_SqoIZg&callback=initMap&v=weekly"></script>
-</body>
-</html>
+</body></html>
